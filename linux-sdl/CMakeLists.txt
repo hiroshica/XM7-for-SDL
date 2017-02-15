@@ -113,7 +113,7 @@ add_subdirectory(sdl)
 add_subdirectory(resource)
 add_subdirectory(locales/C)
 add_subdirectory(locales/ja)
-add_subdirectory(Doc)
+#add_subdirectory(Doc)
 
 
 

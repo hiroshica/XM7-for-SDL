@@ -10,6 +10,7 @@
 #include "agar_sdlview.h"
 #include "agar_cfg.h"
 #include "api_vram.h"
+#include "agar_vramutil.h"
 #include "api_draw.h"
 //#include "api_scaler.h"
 #include "api_kbd.h"

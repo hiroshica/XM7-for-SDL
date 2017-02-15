@@ -373,7 +373,11 @@ void SetDrawFlag(BOOL flag)
    SDLDrawFlag.APaletteChanged = flag;
    SDLDrawFlag.DPaletteChanged = flag;
    SDLDrawFlag.ForcaReDraw = flag;
+   #ifdef _USE_OPENCL
    if((nRenderMethod != RENDERING_RASTER) && (bCLEnabled == FALSE)) return; 
+   #else
+   if((nRenderMethod != RENDERING_RASTER)) return;
+   #endif
    for(y = 0; y < 50 ; y++) {
         for(x = 0; x < 80; x++){
            SDLDrawFlag.read[x][y] =
@@ -414,8 +418,8 @@ void SelectClear(int mode)
        return;
    }
 
-   if(bCLEnabled) {
 #ifdef _USE_OPENCL
+   if(bCLEnabled) {
      dst = cldraw->GetBufPtr(0);
      if(dst == NULL) {
        cldraw->ReleaseBufPtr();
@@ -423,8 +427,9 @@ void SelectClear(int mode)
      }
      memset(dst, 0x00, size *  planes);
      cldraw->ReleaseBufPtr();
+   } else
 #endif
-   } else {
+   {
      if(pVram2 == NULL) return;
      switch(nRenderMethod) {
      case RENDERING_RASTER:
@@ -458,11 +463,14 @@ BOOL Select640(void)
    nDrawLeft = 0;
    nDrawRight = 640;
    LockVram();
+#ifdef _USE_OPENCL
    if(!bCLEnabled) {
+#endif
      bPaletFlag = TRUE;
      SetDirtyFlag(0, 400, TRUE);
      Palet640();
      Palet320();
+#ifdef _USE_OPENCL
    } else { // CL
      bNextFrameRender = TRUE;
      for(y = 0; y < 400; y++) {
@@ -470,6 +478,7 @@ BOOL Select640(void)
        bDirtyLine[y] = FALSE;
      }
    }     
+#endif
 #if defined(USE_SSE2)
     if(pCpuID->use_sse2) {
        pVirtualVramBuilder = &api_vram8_sse2;
@@ -513,10 +522,13 @@ BOOL Select400l(void)
    nDrawLeft = 0;
    nDrawRight = 640;
    LockVram();
+#ifdef _USE_OPENCL
    if(!bCLEnabled) {
+#endif
      bPaletFlag = TRUE;
      Palet640();
      Palet320();
+#ifdef _USE_OPENCL
    } else { // CL
      bNextFrameRender = TRUE;
      for(y = 0; y < 400; y++) {
@@ -524,6 +536,7 @@ BOOL Select400l(void)
        bDirtyLine[y] = FALSE;
      }
    }     
+#endif
 #if defined(USE_SSE2)
     if(pCpuID->use_sse2) {
        pVirtualVramBuilder = &api_vram8_sse2;
@@ -570,12 +583,16 @@ BOOL Select320(void)
    pVirtualVramBuilder = &api_vram4096_generic;
 #endif
    LockVram();
+#ifdef _USE_OPENCL
    if(!bCLEnabled) {
+#endif
      bPaletFlag = TRUE;
      SetDirtyFlag(0, 400, TRUE);
      Palet640();
      Palet320();
-   } else {
+#ifdef _USE_OPENCL
+   } else
+   { //_USE_OPENCL
      bNextFrameRender = TRUE;
      //SetDirtyFlag(0, 400, TRUE);
      for(y = 0; y < 400; y++) {
@@ -583,6 +600,7 @@ BOOL Select320(void)
        bDirtyLine[y] = FALSE;
      }
    }     
+#endif
 #if XM7_VER >= 3
    /*
     * アナログ/200ラインモード
@@ -627,13 +645,21 @@ BOOL Select256k()
    pVirtualVramBuilder = &api_vram256k_generic;
 #endif
 
+#ifdef _USE_OPENCL
    if(!bCLEnabled) {
+#endif
       Palet640();
       Palet320();
+#ifdef _USE_OPENCL
    }
    
+#endif
    LockVram();
+#ifdef _USE_OPENCL
    if((nRenderMethod == RENDERING_RASTER) || (bCLEnabled)){
+#else
+   if((nRenderMethod == RENDERING_RASTER)) {
+#endif
       bNextFrameRender = TRUE;
       SetDirtyFlag(0, 400, TRUE);
       for(y = 0; y < 400; y++) {
@@ -679,7 +705,9 @@ BOOL SelectDraw(void)
    /*
     * すべてクリア
     */
+#ifdef _USE_OPENGL
    if(!bUseOpenGL) {
+#endif
     if(DrawArea != NULL) {
        AG_ObjectLock(DrawArea);
        nullcolor.r = 0;
@@ -689,8 +717,10 @@ BOOL SelectDraw(void)
        AG_FillRect(AGWIDGET(DrawArea)->drv->sRef , &rect, nullcolor);
        AG_ObjectUnlock(DrawArea);
     }
+#ifdef _USE_OPENGL   
    } else { // OpenGLのとき
    }
+#endif
    /*
     * すべてクリア
     */
@@ -838,7 +868,11 @@ void FASTCALL SetDirtyFlag(int top, int bottom, BOOL flag)
 {
 	int y;
 
+#if _USE_OPENCL
 	if ((nRenderMethod == RENDERING_RASTER) || (bCLEnabled)){
+#else
+	if ((nRenderMethod == RENDERING_RASTER)) {
+#endif
 		for (y = top; y < bottom; y++) {
 			bDirtyLine[y] = flag;
 		}
@@ -859,7 +893,11 @@ void vram_notify(WORD addr, BYTE dat)
 	/*
 	 * y座標算出
 	 */
+#ifdef _USE_OPENCL
 	if((nRenderMethod == RENDERING_RASTER) || (bCLEnabled)){
+#else 
+	if((nRenderMethod == RENDERING_RASTER)) {
+#endif	  
 #if XM7_VER >= 3
         switch (bModeOld) {
                 case SCR_400LINE        :       addr &= 0x7fff;
@@ -1058,9 +1096,12 @@ void	ttlpalet_notify(void)
     * 不要なレンダリングを抑制するため、領域設定は描画時に行う
     */
 //   LockVram();
+#ifdef _USE_OPENCL
    if(bCLEnabled) {
 	if(!bPaletFlag) bNextFrameRender = TRUE;
-   } else if(nRenderMethod == RENDERING_RASTER){
+   } else
+#endif
+   if(nRenderMethod == RENDERING_RASTER){
 	bNextFrameRender = TRUE;
         if(!bPaletFlag) Palet640();
    } else {
@@ -1081,9 +1122,12 @@ void	ttlpalet_notify(void)
  */
 void 	apalet_notify(void)
 {
+#ifdef _USE_OPENCL
    if(bCLEnabled) {
 	if(!bPaletFlag) bNextFrameRender = TRUE;
-   } else if(nRenderMethod == RENDERING_RASTER){
+   } else
+#endif
+   if(nRenderMethod == RENDERING_RASTER){
 	bNextFrameRender = TRUE;
         if(!bPaletFlag) Palet320();
    } else {
@@ -1114,7 +1158,11 @@ void 	display_notify(void)
    nDrawLeft = 0;
    nDrawRight = 640;
    now_raster_old = now_raster;
+#ifdef _USE_OPENCL
    if ((nRenderMethod == RENDERING_RASTER) || (bCLEnabled)){
+#else
+   if ((nRenderMethod == RENDERING_RASTER)){
+#endif     
         if (!run_flag) {
 		raster = now_raster;
 		for (i = 0; i < 400; i++) {
@@ -1125,13 +1173,17 @@ void 	display_notify(void)
 		now_raster = raster;
 	} else {
 	  bNextFrameRender = TRUE;
+#ifdef _USE_OPENCL
 	  if(!bCLEnabled) {
+#endif	    
 	     Palet640();
 	     Palet320();
+#ifdef _USE_OPENCL
 	  } else {
 	     SelectDraw2();
 	     if(cldraw != NULL) cldraw->ResetPalette();
 	  }
+#endif
 	   
 	  SetDirtyFlag(0, 400, TRUE);
 	}
@@ -1157,10 +1209,18 @@ void FASTCALL vblankperiod_notify(void)
   BOOL crtflag = crt_flag;
   bModeOld = bMode;
 
+#ifdef _USE_OPENCL  
 	if ((nRenderMethod == RENDERING_RASTER) || (bCLEnabled)){
+#else
+	if ((nRenderMethod == RENDERING_RASTER)){
+#endif	  
 	 now_raster_old = -1;
 	 //bPaletFlag = FALSE;
+#ifdef _USE_OPENCL
 	 if(!bCLEnabled) bPaletFlag = FALSE;
+#else
+	  bPaletFlag = FALSE;
+#endif	  
 	  _prefetch_data_read_l1(bDirtyLine, sizeof(bDirtyLine));
 		/* 次のフレームを強制的に書き換えるか */
 	  if (bNextFrameRender) {
@@ -1617,7 +1677,11 @@ void window_notify(void)
 	/*
 	 * 再描画フラグを更新
 	 */
+#ifdef _USE_OPENCL
 	if((nRenderMethod == RENDERING_RASTER) || (bCLEnabled)){
+#else
+	  if((nRenderMethod == RENDERING_RASTER)){
+#endif
 	    if ((nDrawLeft < nDrawRight) && (nDrawTop < nDrawBottom)) {
 	       for(y = nDrawTop; y < nDrawBottom; y++) {
 		  bDirtyLine[y] = TRUE;
@@ -1802,7 +1866,11 @@ void Draw640All(void)
       nDrawBottom = 400;
       nDrawLeft = 0;
       nDrawRight = 640;
+#ifdef _USE_OPENCL
       if(bCLEnabled == FALSE) SetDrawFlag(TRUE);
+#else
+      SetDrawFlag(TRUE);
+#endif
       UnlockVram();
    }
    if(SDLDrawFlag.DPaletteChanged) {
@@ -1968,7 +2036,9 @@ void Draw400l(void)
    /*
     * レンダリング
     */
+#ifdef _USE_OPENCL
    if((bCLEnabled) && (cldraw != NULL)) return;
+#endif   
    if(nRenderMethod == RENDERING_FULL) {
       LockVram();
       SetDrawFlag(TRUE);
@@ -2069,7 +2139,9 @@ void Draw320(void)
    /*
     * レンダリング
     */
+#ifdef _USE_OPENCL
    if((bCLEnabled) && (cldraw != NULL)) return;
+#endif   
    if(nRenderMethod == RENDERING_FULL) {
       LockVram();
       SetDrawFlag(TRUE);
@@ -2085,7 +2157,11 @@ void Draw320(void)
    
    if(PutVramFunc == NULL) return;
    if(SDLDrawFlag.APaletteChanged) {
+#ifdef _USE_OPENCL
 	 if(bCLEnabled == FALSE) Palet320();
+#else
+         Palet320();
+#endif	 
          SDLDrawFlag.APaletteChanged = FALSE;
          bPaletFlag = TRUE;
    }
@@ -2146,7 +2222,9 @@ void Draw256k(void)
    if(agDriverOps == NULL) return;
    p = GetDrawSurface();
 
+#ifdef _USE_OPENCL
    if((bCLEnabled) && (cldraw != NULL)) return;
+#endif   
    if(nRenderMethod == RENDERING_FULL) {
       LockVram();
       SetDrawFlag(TRUE);

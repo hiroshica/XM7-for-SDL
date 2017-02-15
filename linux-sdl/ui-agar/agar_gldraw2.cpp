@@ -283,7 +283,9 @@ void AGEventDrawGL2(AG_Event *event)
     glPushAttrib(GL_TEXTURE_BIT);
     glPushAttrib(GL_TRANSFORM_BIT);
     glPushAttrib(GL_ENABLE_BIT);
+#ifdef _USE_OPENCL
     InitContextCL();   
+#endif
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

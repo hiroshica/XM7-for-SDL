@@ -32,7 +32,9 @@ extern void DetachMouseSub(void);
 void GetMousePos(int *x, int *y);
 
 extern "C" {
+#ifdef USE_OPENGL
 extern AG_GLView *GLDrawArea;
+#endif
 extern XM7_SDLView *DrawArea;
    
 #ifdef MOUSE

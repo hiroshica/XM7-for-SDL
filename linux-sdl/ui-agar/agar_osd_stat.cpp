@@ -32,7 +32,9 @@
 #include "api_mouse.h"
 
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_sdlview.h"
 
 #define OSD_STRLEN 256

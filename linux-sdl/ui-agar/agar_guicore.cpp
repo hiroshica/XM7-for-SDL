@@ -19,7 +19,11 @@ extern "C" {
 #include "agar_xm7.h"
 #include "agar_cfg.h"
 #include "agar_toolbox.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#else
+extern BOOL EventSDL(AG_Driver *drv);
+#endif
 #include "agar_draw.h"
 #include "agar_sdlview.h"
 #include "agar_osd.h"

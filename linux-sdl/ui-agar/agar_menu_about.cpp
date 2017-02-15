@@ -14,6 +14,7 @@
 #ifdef USE_AGAR
 #include "agar_xm7.h"
 #include "agar_cfg.h"
+#include "agar_draw.h"
 #else
 #include "xm7_sdl.h"
 #include "sdl_cfg.h"
@@ -23,7 +24,9 @@
 #include "sdl_inifile.h"
 #include "agar_toolbox.h"
 #include "agar_cmd.h"
+#ifdef USE_OPENGL
 #include "agar_glutil.h"
+#endif
 
 #ifdef _USE_OPENCL
 #include "agar_glcl.h"

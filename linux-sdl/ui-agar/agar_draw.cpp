@@ -16,7 +16,9 @@
 
 #include "agar_xm7.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_sdlview.h"
 #include "agar_cfg.h"
 #include "agar_logger.h"
@@ -302,7 +304,11 @@ void AGDrawTaskMain(void)
 	  //bNextFrameRender = TRUE;
 	   bClearFlag = TRUE;
 	   SelectDraw2();
+#ifdef _USE_OPENCL
 	   if((nRenderMethod == RENDERING_RASTER) || (bCLEnabled)){
+#else
+	   if((nRenderMethod == RENDERING_RASTER)){
+#endif
 	      SetDirtyFlag(0, 400, TRUE);
 	   } else {
 	      SetDrawFlag(TRUE);

@@ -6,8 +6,10 @@
 #define API_VRAM_H_INCLUDED
 
 #include <SDL/SDL.h>
+#ifdef USE_OPENGL
 #include <GL/gl.h>
 #include <GL/glext.h>
+#endif
 //#include "api_draw.h"
 //#include "api_scaler.h"
 
@@ -17,7 +19,9 @@
 #include "device.h"
 
 //#include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_xm7.h"
 #include "xm7_types.h"
 

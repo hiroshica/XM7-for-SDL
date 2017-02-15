@@ -26,9 +26,8 @@
 #include "agar_draw.h"
 #ifdef USE_OPENGL
 #include "agar_gldraw.h"
-#endif /* USE_OPENGL */
-
 #include "agar_glutil.h"
+#endif /* USE_OPENGL */
 
 #include "xm7_sdl.h"
 
@@ -50,7 +49,9 @@ extern void AG_DrawDetachsub(void);
 
 extern Uint32 nDrawTick1D;
 extern Uint32 nDrawTick1E;
+#ifdef USE_OPENGL
 extern GLuint uVramTextureID;
+#endif
 extern BOOL   bOldFullScan;
 extern BOOL DrawINGFlag;
 extern BOOL DrawSHUTDOWN;

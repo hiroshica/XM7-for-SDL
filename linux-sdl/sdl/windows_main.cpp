@@ -39,7 +39,9 @@
 
 #include "agar_cfg.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_logger.h"
 
 #include "sdl_inifile.h"

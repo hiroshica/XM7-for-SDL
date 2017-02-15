@@ -12,7 +12,9 @@
 
 #include "agar_vramutil.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_sdlview.h"
 
 //#include "DrawAGNonGL.h"

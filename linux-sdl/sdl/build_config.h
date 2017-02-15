@@ -21,27 +21,27 @@
  *
  */
 #ifndef FONTPATH
-#define FONTPATH "/usr/local/share/xm7:/usr/share/fonts/X11/misc:/usr/share/fonts/X11/75dpi:/usr/share/fonts/truetype/ipafont:/usr/share/fonts/truetype/mona:/usr/share/fonts/truetype/misaki:.:./.xm7"
+#define FONTPATH "/usr/local/share/xm7:/usr/share/fonts/X11/misc:/usr/share/fonts/X11/75dpi:/usr/share/fonts/truetype/ipafont:/usr/share/fonts/truetype/takao-gothic:/usr/share/fonts/truetype/mona:/usr/share/fonts/truetype/misaki:.:./.xm7::./.xm7/fonts"
 #endif
 
 #ifndef FUNC_FONT
-#define FUNC_FONT "ipagp.ttf"
+#define FUNC_FONT "TakaoPGothic.ttf"
 #endif
 
 #ifndef STAT_FONT
-#define STAT_FONT "ipagui.ttf"
+#define STAT_FONT "TakaoPGothic.ttf"
 #endif
 
 #ifndef CMT_FONT
-#define CMT_FONT "ipagp.ttf"
+#define CMT_FONT "TakaoPGothic.ttf"
 #endif
 
 #ifndef VFD_FONT
-#define VFD_FONT "ipagp.ttf"
+#define VFD_FONT "TakaoPGothic.ttf"
 #endif
 
 #ifndef UI_FONT
-#define UI_FONT "ipagui.ttf"
+#define UI_FONT "TakaoPGothic.ttf"
 #endif
 
 #ifndef STAT_PT

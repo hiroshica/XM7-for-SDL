@@ -21,7 +21,9 @@
 
 #ifdef USE_AGAR
 #include "agar_xm7.h"
-#include "agar_gldraw.h"
+    #ifdef USE_OPENGL
+    #include "agar_gldraw.h"
+    #endif
 #else
 #include "xm7_sdl.h"
 #endif
@@ -32,7 +34,9 @@
 #include "sdl_sch.h"
 #include "api_draw.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_sdlview.h"
 
 #include <iconv.h>
@@ -135,10 +139,12 @@ void SetPixelFormat(AG_PixelFormat *fmt)
 */
 
 
+#ifdef USE_OPENGL
 void DrawOSDGL(AG_GLView *w)
 {
     return;
 }
+#endif
 
 void DrawOSDEv(AG_Event *event)
 {

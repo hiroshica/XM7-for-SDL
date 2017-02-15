@@ -23,7 +23,9 @@
 #include "agar_cfg.h"
 #include "agar_toolbox.h"
 #include "agar_draw.h"
+#ifdef OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_sdlview.h"
 #include "agar_osd.h"
 #include "agar_logger.h"
@@ -298,6 +300,7 @@ void OnMouseButtonUpSDL(AG_Event *event)
 
 }
 
+#ifdef USE_OPENGL
 void OnMouseMotionGL(AG_Event *event)
 {
     AG_GLView *my = (AG_GLView *)AG_SELF();
@@ -357,5 +360,6 @@ void OnMouseButtonUpGL(AG_Event *event)
    }
 
 }
+#endif
 
 }

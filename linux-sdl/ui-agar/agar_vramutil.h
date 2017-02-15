@@ -13,7 +13,9 @@
 
 #include "agar_xm7.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 
 extern Uint32 *pVram2;
 extern BOOL InitVideo;

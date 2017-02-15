@@ -9,8 +9,10 @@
 //#include <agar/gui/opengl.h>
 
 #include <SDL/SDL.h>
+#ifdef USE_OPENGL
 #include <GL/gl.h>
 #include <GL/glext.h>
+#endif
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -21,7 +23,9 @@
 #include "agar_xm7.h"
 #include "agar_cfg.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "sdl_cpuid.h"
 #include "xm7.h"
 #include "display.h"

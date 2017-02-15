@@ -286,7 +286,7 @@ static void Draw(void *p)
    AG_ObjectLock(my);
 
    if(my->draw_ev != NULL){
-      my->draw_ev->handler(my->draw_ev);
+      my->draw_ev->fn.fnVoid(my->draw_ev);
    }
 
    /*

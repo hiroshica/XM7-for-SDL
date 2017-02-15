@@ -37,7 +37,9 @@
 
 #include "agar_cfg.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_gldraw.h"
+#endif
 #include "agar_logger.h"
 
 #include "sdl_inifile.h"
@@ -237,9 +239,11 @@ void OnDestroy(AG_Event *event)
 #if 0 
    muntrace();
 #endif
+   #if USE_OPENGL
    DiscardTextures(1, &uVramTextureID);
    DiscardTextures(1, &uNullTextureID);
    uVramTextureID = 0;
+   #endif
    XM7_DebugLog(XM7_LOG_INFO, "All resources allocated by VM were freed.");
 //   AG_Destroy();
 }
@@ -555,13 +559,19 @@ drivers = "sdlfb:width=1280:height=880:depth=32";
    if(DrawArea != NULL) {
       AG_RedrawOnTick(DrawArea, 1000 / nDrawFPS);
       XM7_DebugLog(XM7_LOG_INFO, "Direct draw mode.");
-   } else if(GLDrawArea != NULL) {
+   }
+#ifdef _USE_OPENGL
+   else if(GLDrawArea != NULL) {
       AG_RedrawOnTick(GLDrawArea, 1000 / nDrawFPS);
       XM7_DebugLog(XM7_LOG_INFO, "OpenGL mode.");
    }
+#endif   
    bEventRunFlag == TRUE;
    AGDrawTaskEvent(TRUE);
 //   muntrace();
+//   if(agDriverSw && AG_UsingSDL(NULL)) {
+     atexit(SDL_Quit);
+//   }
    XM7_DebugLog(XM7_LOG_INFO, "All End.");
 }
 

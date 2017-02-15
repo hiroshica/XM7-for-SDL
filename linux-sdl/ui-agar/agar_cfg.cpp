@@ -29,7 +29,9 @@
 #include "agar_cfg.h"
 #include "agar_osd.h"
 #include "agar_draw.h"
+#ifdef USE_OPENGL
 #include "agar_glutil.h"
+#endif
 #include "agar_debugger.h"
 
 
@@ -859,9 +861,12 @@ void ApplyCfg(void)
    ResizeWindow_Agar2(nDrawWidth, nDrawHeight);
    if(DrawArea != NULL) {
 	AG_RedrawOnTick(DrawArea, 1000 / nDrawFPS);
-   } else if(GLDrawArea != NULL) {
+   }
+#ifdef _USE_OPENGL
+     else if(GLDrawArea != NULL) {
 	AG_RedrawOnTick(GLDrawArea, 1000 / nDrawFPS);
    }
+#endif
    
    
    
